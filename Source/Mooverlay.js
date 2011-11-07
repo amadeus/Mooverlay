@@ -2,13 +2,12 @@
 
 var preventDefault = function(e){ e.preventDefault(); };
 
-var Mooverlay = this.Mooverlay = new Class({
+var Mooverlay = window.Mooverlay = new Class({
 
 	Implements: [Options, Events],
 
 	options: {
 		width: 400,
-		height: 400,
 		backgroundColor: '#fff',
 		scroll: false,
 		styles: {
@@ -18,7 +17,7 @@ var Mooverlay = this.Mooverlay = new Class({
 			width: '100%',
 			height: '100%',
 			backgroundColor: '#000',
-			opacity: .5,
+			opacity: 0.5,
 			zIndex: 9998
 		}
 	},
@@ -50,7 +49,6 @@ var Mooverlay = this.Mooverlay = new Class({
 				position: 'fixed',
 				top: '50%',
 				left: '50%',
-				marginTop: -(o.height / 2),
 				marginLeft: -(o.width / 2),
 				width: o.width,
 				height: o.height,
@@ -58,13 +56,17 @@ var Mooverlay = this.Mooverlay = new Class({
 				backgroundColor: o.backgroundColor
 			},
 			events: {
-				click: function(e){ e.stop(); }
+				click: function(e){ e.stopPropagation(); }
 			}
 		});
 
 		this.content = this.addContent(content);
 
 		this.attach();
+	},
+
+	verticallyCenter: function(){
+		this.container.setStyle('margin-top', -(this.container.getSize().y / 2));
 	},
 
 	addContent: function(){
@@ -86,6 +88,7 @@ var Mooverlay = this.Mooverlay = new Class({
 		this.shown = true;
 		this.overlay.inject(document.body);
 		this.container.inject(document.body);
+		this.verticallyCenter();
 		this.fireEvent('show', [this.trigger, this.content, this.overlay]);
 	},
 
